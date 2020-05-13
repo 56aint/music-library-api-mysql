@@ -6,11 +6,11 @@ const ArtistModel = require('./models/artist');
 const { DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT } = process.env;
 
 const setupDatabase = () => {
-  const sequelize = new Sequelize('music-library-api-db', 'root', process.env.DB_PASSWORD, {
-    host: '127.0.0.1',
-    port: 3306,
+  const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+    host: DB_HOST,
+    port: DB_PORT,
     dialect: 'mysql',
-    // logging: false,
+    logging: false,
   });
 
   const Artist = ArtistModel(sequelize, Sequelize);

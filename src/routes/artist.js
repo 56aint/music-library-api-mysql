@@ -1,5 +1,5 @@
 /* src/routes/artist.js */
 
-const artistRouter;
+// const artistRouter;
 
-module.exports = artistRouter
+// module.exports = artistRouter

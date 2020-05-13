@@ -1,5 +1,5 @@
 /* src/routes/album.js */
 
-const albumRouter;
+// const albumRouter;
 
-module.exports = albumRouter
+// module.exports = albumRouter
