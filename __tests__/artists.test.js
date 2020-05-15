@@ -29,7 +29,7 @@ describe('/artists', () => {
       });
 
       await expect(response.status).to.equal(201);
-      // await expect(response.body.name).to.equal('Tame Impala');
+      await expect(response.body.name).to.equal('Tame Impala');
 
       const insertedArtistRecords = await Artist.findByPk(response.body.id, { raw: true });
       await expect(insertedArtistRecords.name).to.equal('Tame Impala');
@@ -51,7 +51,7 @@ describe('/artists', () => {
     });
 
     describe('GET /artists', () => {
-      xit('gets all artist records', (done) => {
+      it('gets all artist records', (done) => {
         request(app)
           .get('/artists')
           .then((res) => {
@@ -61,6 +61,7 @@ describe('/artists', () => {
               const expected = artists.find((a) => a.id === artist.id);
               expect(artist.name).to.equal(expected.name);
               expect(artist.genre).to.equal(expected.genre);
+              // console.log(expected)
             });
             done();
           });
