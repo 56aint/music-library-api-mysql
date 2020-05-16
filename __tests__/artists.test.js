@@ -69,7 +69,7 @@ describe('/artists', () => {
     });
 
     describe('GET /artists/:artistId', () => {
-      xit('gets artist record by id', (done) => {
+      it('gets artist record by id', (done) => {
         const artist = artists[0];
         request(app)
           .get(`/artists/${artist.id}`)
@@ -81,7 +81,7 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', (done) => {
+      it('returns a 404 if the artist does not exist', (done) => {
         request(app)
           .get('/artists/12345')
           .then((res) => {
@@ -93,7 +93,7 @@ describe('/artists', () => {
     });
 
     describe('PATCH /artists/:artistId', () => {
-      xit('updates artist genre by id', (done) => {
+      it('updates artist genre by id', (done) => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist.id}`)
@@ -106,8 +106,20 @@ describe('/artists', () => {
             });
           });
       });
-
-      xit('returns a 404 if the artist does not exist', (done) => {
+      it('updates artist name by id', (done) => {
+        const artist = artists[0];
+        request(app)
+          .patch(`/artists/${artist.id}`)
+          .send({ name: 'Biggy Smalls' })
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            Artist.findByPk(artist.id, { raw: true }).then((updatedArtist) => {
+              expect(updatedArtist.name).to.equal('Biggy Smalls');
+              done();
+            });
+          });
+      });
+      it('returns a 404 if the artist does not exist', (done) => {
         request(app)
           .patch('/artists/12345')
           .send({ genre: 'Psychedelic Rock' })
@@ -119,8 +131,34 @@ describe('/artists', () => {
       });
     });
 
+    /* describe('PATCH /artists/:artistId', () => {
+      it('updates artist name by id', (done) => {
+        const artist = artists[0];
+        request(app)
+          .patch(`/artists/${artist.id}`)
+          .send({ name: 'Biggy Smalls' })
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            Artist.findByPk(artist.id, { raw: true }).then((updatedArtist) => {
+              expect(updatedArtist.name).to.equal('Biggy Smalls');
+              done();
+            });
+          });
+      });
+      it('returns a 404 if the artist does not exist', (done) => {
+        request(app)
+          .patch('/artists/12345')
+          .send({ name: 'Biggy Smalls' })
+          .then((res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal('The artist could not be found.');
+            done();
+          });
+      });
+    }); */
+
     describe('DELETE /artists/:artistId', () => {
-      xit('deletes artist record by id', (done) => {
+      it('deletes artist record by id', (done) => {
         const artist = artists[0];
         request(app)
           .delete(`/artists/${artist.id}`)
@@ -133,12 +171,12 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', (done) => {
+      it('returns a 404 if the artist does not exist', (done) => {
         request(app)
           .delete('/artists/12345')
           .then((res) => {
             expect(res.status).to.equal(404);
-            expect(res.body.error).to.equal('The artist could not be found.');
+            expect(res.body.error).to.equal('No artist found, no artist deleted.');
             done();
           });
       });
