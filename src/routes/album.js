@@ -1,5 +1,11 @@
 /* src/routes/album.js */
 
-// const albumRouter;
+const express = require('express');
 
-// module.exports = albumRouter
+// const albumController = require('../controllers/albums');
+
+const router = express.Router();
+
+// router.post('/:artistId/albums', albumController.create);
+
+module.exports = router;

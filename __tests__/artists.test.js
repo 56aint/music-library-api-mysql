@@ -5,7 +5,7 @@ const { Artist } = require('../src/sequelize');
 const app = require('../src/app');
 
 describe('/artists', () => {
-  before(async () => {
+  beforeEach(async () => {
     try {
       await Artist.sequelize.sync();
     } catch (err) {

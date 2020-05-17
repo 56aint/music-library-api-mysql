@@ -7,7 +7,7 @@ const { Artist, Album } = require('../src/sequelize');
 describe('/albums', () => {
   let artist;
 
-  before(async () => {
+  beforeEach(async () => {
     try {
       await Artist.sequelize.sync();
       await Album.sequelize.sync();
@@ -30,7 +30,7 @@ describe('/albums', () => {
   });
 
   describe('POST /artists/:artistId/albums', () => {
-    xit('creates a new album for a given artist', (done) => {
+    it('creates a new album for a given artist', (done) => {
       request(app)
         .post(`/artists/${artist.id}/albums`)
         .send({
@@ -47,6 +47,67 @@ describe('/albums', () => {
             done();
           });
         });
+    });
+
+    it('returns a 404 and does not create an album if the artist does not exist', (done) => {
+      request(app)
+        .post('/artists/1234/albums')
+        .send({
+          name: 'InnerSpeaker',
+          year: 2010,
+        })
+        .then((res) => {
+          expect(res.status).to.equal(404);
+          expect(res.body.error).to.equal('The artist could not be found.');
+
+          Album.findAll().then((albums) => {
+            expect(albums.length).to.equal(0);
+            done();
+          });
+        });
+    });
+  });
+
+  describe('with albums in the database', () => {
+    // let artists;
+    let albums;
+    beforeEach((done) => {
+      Promise.all([
+        Album.create({ artistId: artist.id, name: 'Album One', year: '1999' }),
+        Album.create({ artistId: artist.id, name: 'Album Two', year: '1998' }),
+        Album.create({ artistId: artist.id, name: 'Album Three', genre: '1997' }),
+      ]).then((documents) => {
+        albums = documents;
+        done();
+      });
+    });
+
+
+    describe('GET /artists/albums', () => {
+      xit('gets all the album by artist', (done) => {
+        request(app)
+          .get(`/artists/${artist.id}/albums`)
+        /* .send({
+           name: 'InnerSpeaker',
+           year: 2010,
+        }) */
+          .then((res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body.length).to.equal(2);
+            res.body.forEach((album) => {
+              const expected = albums.find((a) => a.id === album.id);
+              expect(album.artistId).to.equal(expected.artist.id);
+              expect(album.name).to.equal(expected.name);
+              expect(album.year).to.equal(expected.year);
+            });
+            done();
+          /* Album.findByPk(res.body.id, { raw: true }).then((album) => {
+            expect(album.name).to.equal('InnerSpeaker');
+            expect(album.year).to.equal(2010);
+            expect(album.artistId).to.equal(artist.id);
+            done(); */
+          });
+      });
     });
 
     xit('returns a 404 and does not create an album if the artist does not exist', (done) => {
