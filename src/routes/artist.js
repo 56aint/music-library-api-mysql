@@ -4,6 +4,7 @@ const express = require('express');
 
 const artistController = require('../controllers/artists');
 const albumController = require('../controllers/albums');
+const songController = require('../controllers/songs');
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.get('/:artistId/albums', albumController.getAlbumsByArtistId);
 router.patch('/:albumId/albums', albumController.updateAlbumByAlbumId);
 router.delete('/:albumId/albums', albumController.deleteAlbumById);
 
+router.post('/:albumId}/songs', songController.createSongByalbumId).
 
-module.exports = router;
+  module.exports = router;

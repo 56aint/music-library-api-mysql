@@ -8,7 +8,7 @@ describe('/songs', () => {
   let artist;
   let album;
 
-  before(async () => {
+  beforeEach(async () => {
     try {
       await Artist.sequelize.sync();
       await Album.sequelize.sync();
@@ -38,7 +38,7 @@ describe('/songs', () => {
   });
 
   describe('POST /album/:albumId/song', () => {
-    xit('creates a new song under an album', (done) => {
+    it('creates a new song under an album', (done) => {
       request(app)
         .post(`/album/${album.id}/song`)
         .send({
