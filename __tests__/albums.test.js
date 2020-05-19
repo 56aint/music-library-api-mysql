@@ -154,7 +154,7 @@ describe('/albums', () => {
             });
           });
       });
-      xit('returns a 404 if the album does not exist', (done) => {
+      it('returns a 404 if the album does not exist', (done) => {
         request(app)
           .delete('/artists/1234/albums')
           .then((res) => {
