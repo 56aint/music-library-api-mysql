@@ -119,7 +119,7 @@ describe('/albums', () => {
       it('updates albums updatable values by albumId', (done) => {
         const album = albums[0];
         request(app)
-          .patch(`/artists/${album.id}/albums`)
+          .patch(`/albums/${album.id}/albums`)
           .send({ year: 2000 })
           .then((res) => {
             expect(res.status).to.equal(200);
@@ -131,7 +131,7 @@ describe('/albums', () => {
       });
       it('returns a 404 if the album does not exist', (done) => {
         request(app)
-          .patch('/artists/1234/albums')
+          .patch('/albums/1234/albums')
           .then((res) => {
             expect(res.status).to.equal(404);
             expect(res.body.error).to.equal('The album could not be found.');
@@ -145,7 +145,7 @@ describe('/albums', () => {
       it('it deletes album by albumId', (done) => {
         const album = albums[0];
         request(app)
-          .delete(`/artists/${album.id}/albums`)
+          .delete(`/albums/${album.id}/albums`)
           .then((res) => {
             expect(res.status).to.equal(204);
             Album.findByPk(album.id, { raw: true }).then((updatedAlbum) => {
@@ -156,12 +156,13 @@ describe('/albums', () => {
       });
       it('returns a 404 if the album does not exist', (done) => {
         request(app)
-          .delete('/artists/1234/albums')
+          .delete('/albums/1234/albums')
           .then((res) => {
             expect(res.status).to.equal(404);
-            expect(res.body.error).to.equal('The album could not be found.');
+            expect(res.body.error).to.equal('No album found, no artist deleted.');
+            done();
           });
-        done();
+        // done();
       });
     });
   });
