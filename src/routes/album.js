@@ -12,4 +12,6 @@ router.delete('/:albumId/albums', albumController.deleteAlbumById);
 
 router.post('/:albumId/song', songController.createSongByAlbumId);
 
+router.get('/:albumId/songs', songController.getSongsByAlbumId);
+
 module.exports = router;

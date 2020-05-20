@@ -7,7 +7,7 @@ exports.createSongByAlbumId = (req, res) => {
 
   Album.findByPk(albumId).then(album => {
     if (!album) {
-      res.status(404).json({ error: 'The album could not be found' });
+      res.status(404).json({ error: 'The album could not be found.' });
     } else {
       Song.create({
         name: req.body.name,
@@ -15,38 +15,22 @@ exports.createSongByAlbumId = (req, res) => {
         artistId: album.artistId,
       }).then(songCreated => {
         res.status(201).json(songCreated);
-        // console.log(songCreated);
+        console.log(songCreated);
       });
     }
   });
-
-  /* Album.findByPk(albumId).then(album => {
+};
+exports.getSongsByAlbumId = (req, res) => {
+  const { albumId } = req.params;
+  console.log(albumId);
+  Album.findByPk(albumId).then(album => {
     if (!album) {
       res.status(404).json({ error: 'The album could not be found' });
     } else {
-      Song.create({
-        name: req.body.name,
-        albumId: album.id,
-        artistId: album.artistId,
-      }).then(song => {
-        song.setAlbum(albumId).then(songCreated => {
-          res.status(201).json(songCreated);
-        });
+      Song.findAll({ include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
+        res.status(200).json(songs);
+        console.log(songs);
       });
     }
-  }); */
-
-/* Album.findAll({ include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then(album => {
-    if (!album) {
-      res.status(404).json({ error: 'The album could not be found' });
-    } else {
-      Song.create({
-        name: req.body.name,
-        albumId: album.id,
-        artistId: album.artistId,
-      }).then(songCreated => {
-        res.status(201).json(songCreated);
-      });
-    }
-  }); */
+  });
 };
