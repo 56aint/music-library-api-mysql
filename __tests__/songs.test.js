@@ -104,22 +104,66 @@ describe('/songs', () => {
             done();
           });
       });
-      xit('returns a 404 and does not create song if the album does not exist', (done) => {
+      it('returns a 404 if the album does not exist', (done) => {
         request(app)
-          .post('/albums/1234/song')
-          .send({
-            artist: artist.id,
-            name: 'Solitude Is Bliss',
-          })
+          .get('/albums/123456/songs')
           .then((res) => {
             expect(res.status).to.equal(404);
             expect(res.body.error).to.equal('The album could not be found.');
+            // done();
 
-            Album.findAll().then((albums) => {
-              expect(albums.length).to.equal(1);
-              done();
-            });
+            // Song.findAll().then((songs) => {
+            expect(songs.length).to.equal(3);
+            // done();
+            // });
           });
+        done();
+      });
+    });
+
+
+    describe('GET /artists/:artistId/song', () => {
+      it('it gets all the songs by artistId', (done) => {
+        request(app)
+          .get(`/artists/${artist.id}/songs`)
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.length).to.equal(3);
+            res.body.forEach((song) => {
+              const expected = songs.find((a) => a.id === song.id);
+              expect(song.artistId).to.equal(artist.id);
+              expect(song.albumId).to.equal(album.id);
+              expect(song.name).to.equal(expected.name);
+              // done();
+            });
+            done();
+          });
+      });
+      it('returns a 404 if the artist does not exist', (done) => {
+        request(app)
+          .get('/artists/1234/songs')
+          .then((res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal('The artist could not be found.');
+            // done();
+            // Song.findAll().then((albums) => {
+            expect(songs.length).to.equal(3);
+            done();
+            // });
+          });
+      });
+    });
+
+    describe('PATCH /songs/:songId', () => {
+      xit('updates a song track in the db by its unique id', (done) => {
+        const song = songs[0];
+        request(app).patch(`/songs/${song.id}`).send({ name: 'Changes' }).then((res) => {
+          expect(res.status).to.equal(200);
+          Song.findByPk(song.id, { raw: true }).then((updateSong) => {
+            expect(updateSong.name).to.equal('Changes');
+            done();
+          });
+        });
       });
     });
   });
