@@ -3,7 +3,7 @@
 const { Album } = require('../sequelize');
 const { Artist } = require('../sequelize');
 
-exports.create = (req, res) => {
+exports.createAlbum = (req, res) => {
   const { artistId } = req.params;
 
   Artist.findByPk(artistId).then(artist => {
@@ -26,9 +26,11 @@ exports.getAlbumsByArtistId = (req, res) => {
     if (!artist) {
       res.status(404).json({ error: 'The artist could not be found.' });
     } else {
-      Album.findAll({ where: { artistId } }).then((albums) => {
-        res.status(200).json(albums);
-      });
+      Album.findAll({ where: { artistId } }).then(albums => res.status(200).json(albums));
+
+
+      /* Album.findAll({ where: { artistId } }).then((albums) => {
+        res.status(200).json(albums); */
     }
   });
 };
@@ -48,9 +50,10 @@ exports.updateAlbumByAlbumId = (req, res) => {
 
 exports.deleteAlbumById = (req, res) => {
   const { albumId } = req.params;
+
   Album.destroy({ where: { id: albumId } }).then((albumDeleted) => {
     if (!albumDeleted) {
-      res.status(404).json({ error: 'No album found, no artist deleted.' });
+      res.status(404).json({ error: 'No album found, no album deleted.' });
     } else {
       res.status(204).json(`${albumDeleted} deleted successfully`);
     }

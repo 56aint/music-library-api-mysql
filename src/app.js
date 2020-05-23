@@ -13,6 +13,6 @@ app.use(express.json());
 
 app.use('/artists', artistRouter);
 app.use('/albums', albumRouter);
-// app.use('/songs', songRouter);
+app.use('/songs', songRouter);
 
 module.exports = app;

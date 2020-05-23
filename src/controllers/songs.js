@@ -23,14 +23,14 @@ exports.createSongByAlbumId = (req, res) => {
 exports.getSongsByAlbumId = (req, res) => {
   const { albumId } = req.params;
   // console.log(albumId);
-  Album.findByPk(albumId).then(album => {
-    if (!album) {
+  Album.findByPk(albumId).then(song => {
+    if (!song) {
       res.status(404).json({ error: 'The album could not be found.' });
     } else {
       Song.findAll({ include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
         res.status(200).json(songs);
-        // console.log(songs);
       });
+      // console.log(songs);
     }
   });
 };
@@ -45,6 +45,31 @@ exports.getSongsByArtistId = (req, res) => {
       Song.findAll({ include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
         res.status(200).json(songs);
         // console.log(songs);
+      });
+    }
+  });
+};
+
+exports.updateSongById = (req, res) => {
+  const { songId } = req.params;
+  Song.update(req.body, { where: { id: songId } }).then(([rowsUpdated]) => {
+    if (!rowsUpdated) {
+      res.status(404).json({ error: 'The song could not be found.' });
+    } else {
+      res.status(200).json(rowsUpdated);
+    }
+  });
+};
+
+exports.deleteSongById = (req, res) => {
+  const { songId } = req.params;
+
+  Song.findByPk(songId).then(song => {
+    if (!song) {
+      res.status(404).json({ error: 'No deletions as that song could not be found.' });
+    } else {
+      Song.destroy({ where: { id: songId } }).then((deletedSong) => {
+        res.status(204).json(deletedSong);
       });
     }
   });

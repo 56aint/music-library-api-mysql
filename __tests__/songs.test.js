@@ -8,7 +8,7 @@ describe('/songs', () => {
   let artist;
   let album;
 
-  beforeEach(async () => {
+  before(async () => {
     try {
       await Artist.sequelize.sync();
       await Album.sequelize.sync();
@@ -128,7 +128,7 @@ describe('/songs', () => {
           .get(`/artists/${artist.id}/songs`)
           .then((res) => {
             expect(res.status).to.equal(200);
-            expect(res.body.length).to.equal(3);
+            // expect(res.body.length).to.equal(3);
             res.body.forEach((song) => {
               const expected = songs.find((a) => a.id === song.id);
               expect(song.artistId).to.equal(artist.id);
@@ -155,15 +155,50 @@ describe('/songs', () => {
     });
 
     describe('PATCH /songs/:songId', () => {
-      xit('updates a song track in the db by its unique id', (done) => {
+      it('updates a song track in the db by its unique id', (done) => {
         const song = songs[0];
-        request(app).patch(`/songs/${song.id}`).send({ name: 'Changes' }).then((res) => {
-          expect(res.status).to.equal(200);
-          Song.findByPk(song.id, { raw: true }).then((updateSong) => {
-            expect(updateSong.name).to.equal('Changes');
+        request(app)
+          .patch(`/songs/${song.id}`)
+          .send({ name: 'Changes' })
+          .then((res) => {
+            expect(res.status).to.equal(200);
+            Song.findByPk(song.id, { raw: true }).then((updateSong) => {
+              expect(updateSong.name).to.equal('Changes');
+              console.log(updateSong.name, ': Yeah! Iv been updated to changes');
+              done();
+            });
+          });
+      });
+      it('returns a 404 if the song does not exist', (done) => {
+        request(app)
+          .patch('/songs/1234').then((res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal('The song could not be found.');
+          });
+        done();
+      });
+    });
+
+    describe('DELETE /songs/:songId', () => {
+      it('deletes song from databse by its unique id', (done) => {
+        const song = songs[0];
+        request(app)
+          .delete(`/songs/${song.id}`)
+          .then((res) => {
+            expect(res.status).to.equal(204);
+            Song.findByPk(song.id, { raw: true }).then((deletedSong) => {
+              expect(deletedSong).to.equal(null);
+              done();
+            });
+          });
+      });
+      it('returns a 404 if the song does not exist', (done) => {
+        request(app)
+          .delete('/songs/123456').then((res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal('No deletions as that song could not be found.');
             done();
           });
-        });
       });
     });
   });

@@ -7,7 +7,7 @@ const { Artist, Album } = require('../src/sequelize');
 describe('/albums', () => {
   let artist;
 
-  beforeEach(async () => {
+  before(async () => {
     try {
       await Artist.sequelize.sync();
       await Album.sequelize.sync();
@@ -123,8 +123,8 @@ describe('/albums', () => {
           .send({ year: 2000 })
           .then((res) => {
             expect(res.status).to.equal(200);
-            Album.findByPk(album.id, { raw: true }).then((updateAlbum) => {
-              expect(updateAlbum.year).to.equal(2000);
+            Album.findByPk(album.id, { raw: true }).then((updatedAlbum) => {
+              expect(updatedAlbum.year).to.equal(2000);
               done();
             });
           });
@@ -159,7 +159,7 @@ describe('/albums', () => {
           .delete('/albums/1234/albums')
           .then((res) => {
             expect(res.status).to.equal(404);
-            expect(res.body.error).to.equal('No album found, no artist deleted.');
+            expect(res.body.error).to.equal('No album found, no album deleted.');
             done();
           });
         // done();
