@@ -5,7 +5,7 @@ const AlbumModel = require('./models/album');
 const SongModel = require('./models/song');
 
 const {
-  DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT,
+  DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, CLEARDB_DATABASE_URL,
 } = process.env;
 
 const setupDatabase = () => {
@@ -17,6 +17,7 @@ const setupDatabase = () => {
       dialect: 'mysql',
       logging: false,
     });
+
 
   const Artist = ArtistModel(sequelize, Sequelize);
   const Album = AlbumModel(sequelize, Sequelize);
