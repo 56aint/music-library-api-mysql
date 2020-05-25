@@ -1,3 +1,4 @@
+// import Sequelize from 'sequelize';
 const Sequelize = require('sequelize');
 const ArtistModel = require('./models/artist');
 const AlbumModel = require('./models/album');
@@ -8,12 +9,14 @@ const {
 } = process.env;
 
 const setupDatabase = () => {
-  const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-    host: DB_HOST,
-    port: DB_PORT,
-    dialect: 'mysql',
-    logging: false,
-  });
+  const sequelize = CLEARDB_DATABASE_URL ?
+    new Sequelize(CLEARDB_DATABASE_URL) :
+    new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+      host: DB_HOST,
+      port: DB_PORT,
+      dialect: 'mysql',
+      logging: false,
+    });
 
   const Artist = ArtistModel(sequelize, Sequelize);
   const Album = AlbumModel(sequelize, Sequelize);

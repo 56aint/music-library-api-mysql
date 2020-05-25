@@ -131,32 +131,6 @@ describe('/artists', () => {
       });
     });
 
-    /* describe('PATCH /artists/:artistId', () => {
-      it('updates artist name by id', (done) => {
-        const artist = artists[0];
-        request(app)
-          .patch(`/artists/${artist.id}`)
-          .send({ name: 'Biggy Smalls' })
-          .then((res) => {
-            expect(res.status).to.equal(200);
-            Artist.findByPk(artist.id, { raw: true }).then((updatedArtist) => {
-              expect(updatedArtist.name).to.equal('Biggy Smalls');
-              done();
-            });
-          });
-      });
-      it('returns a 404 if the artist does not exist', (done) => {
-        request(app)
-          .patch('/artists/12345')
-          .send({ name: 'Biggy Smalls' })
-          .then((res) => {
-            expect(res.status).to.equal(404);
-            expect(res.body.error).to.equal('The artist could not be found.');
-            done();
-          });
-      });
-    }); */
-
     describe('DELETE /artists/:artistId', () => {
       it('deletes artist record by id', (done) => {
         const artist = artists[0];
