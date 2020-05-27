@@ -27,12 +27,16 @@ exports.getSongsByAlbumId = (req, res) => {
     if (!song) {
       res.status(404).json({ error: 'The album could not be found.' });
     } else {
-      Song.findAll({ where: { albumId } })
-        .then(songs => { return res.status(200).json(songs); });
-      /* Song.findAll({ include: [{ model: Album, as: 'album' }] }).then((songs) => {
+      /*Song.findAll({ where: { albumId } })
+        .then(songs => { res.status(200).json(songs); });*/
+
+
+      Song.findAll({ include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
         res.status(200).json(songs);
-      }); */
+      });
       // console.log(songs);
+
+
     }
   });
 };
