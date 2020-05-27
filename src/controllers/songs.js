@@ -39,7 +39,7 @@ exports.getSongsByArtistId = (req, res) => {
     if (!artist) {
       res.status(404).json({ error: 'The artist could not be found.' });
     } else {
-      Song.findAll({ include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
+      Song.findAll({ where: { artistId }, include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
         res.status(200).json(songs);
       });
     }
