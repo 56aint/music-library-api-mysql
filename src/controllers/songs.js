@@ -30,13 +30,14 @@ exports.getSongsByAlbumId = (req, res) => {
       /* Song.findAll({ where: { albumId } })
         .then(songs => { res.status(200).json(songs); }); */
 
-
       /* Song.findAll({ include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
         res.status(200).json(songs);
       }); */
       // console.log(songs);
 
-      Song.findAll({ where: { albumId }, include: [{ model: Artist, as: 'artist' }, { model: 'Album', as: 'album' }] });
+      Song.findAll({ where: { albumId }, include: [{ model: Artist, as: 'artist' }, { model: Album, as: 'album' }] }).then((songs) => {
+        res.status(200).json(songs);
+      });
     }
   });
 };
